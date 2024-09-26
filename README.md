@@ -22,7 +22,6 @@ O robô funciona da seguinte maneira:
 
 ## Configuração dos SFTP: 
 Preencha a lista de credenciais para os SFTP que serão acessados.
-
 ---
 private static List<SftpCredentials> sftpCredentialsList = new List<SftpCredentials>
 {
@@ -30,6 +29,9 @@ private static List<SftpCredentials> sftpCredentialsList = new List<SftpCredenti
     // Adicione mais SFTP conforme necessário
 };
 ---
+
+
+
 
 ## Classe de Credenciais: 
 A classe SftpCredentials armazena as informações necessárias para autenticação.
@@ -43,6 +45,9 @@ private class SftpCredentials
     public int Port { get; set; } = //ID port;
 }
 ---
+
+
+
 
 ## Conexão e Download: 
 O robô itera sobre a lista de SFTP, conecta-se a cada um e baixa os arquivos que foram modificados no dia atual.
@@ -59,6 +64,9 @@ foreach (var credentials in sftpCredentialsList)
 }
 ---
 
+
+
+
 ## Upload para S3: 
 Os arquivos baixados são armazenados em um MemoryStream e enviados diretamente para o Amazon S3.
 
@@ -68,6 +76,9 @@ var serviceCollection = new ServiceCollection();
 await fileTransferUtility.UploadAsync(memoryStream, bucketName, fullPath);
 ---
 
+
+
+
 ## Registro de Logs: 
 O robô registra o início e o fim de cada download em um banco de dados, facilitando o monitoramento do processo.
 
@@ -75,6 +86,9 @@ O robô registra o início e o fim de cada download em um banco de dados, facili
 await LogDownloadStartAsync(dbConnection, credentials.Username, file.Name, startTime);
 await LogDownloadEndAsync(dbConnection, credentials.Username, file.Name, fileSize, startTime, endTime, id);
 ---
+
+
+
 
 ## Tratamento de Erros: 
 Caso ocorra um erro durante o processo, ele é capturado e uma mensagem de erro é exibida.
@@ -85,6 +99,9 @@ catch (Exception ex)
     Console.WriteLine($"Erro durante o processo: {ex.Message}");
 }
 ---
+
+
+
 
 ## Desconexão: 
 Após processar todos os arquivos, o robô se desconecta do SFTP e passa para o próximo.
